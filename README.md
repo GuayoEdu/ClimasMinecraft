@@ -1,6 +1,6 @@
 # weather-frontend-m2
 
-Proyecto del Módulo 2 - App de Clima (Frontend).
+Proyecto Modulo 2
 
 ## Tema
 Versión inspirada en Minecraft, usando biomas del Nether.
@@ -24,13 +24,8 @@ Versión inspirada en Minecraft, usando biomas del Nether.
 - Diseño responsive para celular y escritorio
 
 ## Repositorio GitHub
-Pon aquí tu enlace:
-`https://github.com/tuusuario/weather-frontend-m2`
+`https://github.com/GuayoEdu/ClimasMinecraft`
 
-## Commits sugeridos
-- `crear estructura inicial del proyecto`
-- `agregar cards de biomas en home`
-- `agregar vista detalle con pronostico semanal`
 
 ## Cómo usar
 1. Descargar o clonar el proyecto
