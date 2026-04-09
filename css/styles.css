@@ -1,0 +1,57 @@
+body {
+  background-color: #2a0f0f;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+h1, h2 {
+  color: #ffb347;
+}
+
+.card-bioma {
+  background-color: #4a1c1c;
+  color: white;
+  border: 2px solid #7a2b2b;
+  margin-bottom: 20px;
+  height: 100%;
+}
+
+.card-bioma .btn {
+  width: 100%;
+}
+
+.caja-detalle {
+  background-color: #4a1c1c;
+  border: 2px solid #7a2b2b;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.pronostico-card {
+  background-color: #5c2323;
+  border: 1px solid #8d3d3d;
+  color: white;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.badge-estado {
+  background-color: #ff6b35;
+}
+
+.bg-light {
+  background-color: #f3e7d0 !important;
+  color: #222;
+}
+
+@media (max-width: 420px) {
+  h1 {
+    font-size: 26px;
+  }
+
+  .caja-detalle {
+    padding: 15px;
+  }
+}
