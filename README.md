@@ -47,6 +47,7 @@ Los datos están definidos en `data.js` como un arreglo de objetos:
 
 ## Repositorio GitHub
 https://github.com/GuayoEdu/ClimasMinecraft
+https://guayoedu.github.io/ClimasMinecraft/
 
 ## Cómo usar
 1. Descargar o clonar el proyecto
