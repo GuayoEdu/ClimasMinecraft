@@ -1,56 +1,55 @@
-# weather-frontend-m2
-
-Proyecto Módulo 4 – App de Clima
-
+# weather-frontend-m5
+Proyecto Módulo 5 – App de Clima
 ## Tema
-Aplicación inspirada en Minecraft, usando biomas del Nether como localidades.
-
+Aplicación inspirada en los biomas del Nether de Minecraft.
 ## Tecnologías usadas
 - HTML5
-- CSS
-- Bootstrap 5 (CDN)
-- JavaScript (arrays, objetos, funciones, DOM)
+- CSS3
+- Bootstrap 5
+- JavaScript ES6+
+- Programación Orientada a Objetos
+- Fetch API
+- Async/Await
 - Git y GitHub
-
-## Páginas
-- `index.html`: muestra los biomas en cards + buscador dinámico
-- `detalle.html`: muestra información ampliada + pronóstico semanal + estadísticas
-- `acerca.html`: explicación del proyecto
-
-## Modelado de datos
-Los datos están definidos en `data.js` como un arreglo de objetos:
-
-- Cada bioma contiene:
-  - `id`, `nombre`, `temperatura`, `estado`, `humedad`, `viento`
-  - `semana`: arreglo con pronóstico diario (día, min, max, estado)
-
+## API utilizada
+Se utilizó la API pública Open-Meteo:
+https://open-meteo.com/
+Documentación:
+https://open-meteo.com/en/docs
+## Clases utilizadas
+### ApiClient
+Se encarga de consumir la API usando fetch y async/await.
+### WeatherApp
+Se encarga de:
+- Gestionar los lugares.
+- Obtener datos desde la API.
+- Renderizar la información.
+- Calcular estadísticas.
+- Generar alertas climáticas.
 ## Funcionalidades
-- Listado dinámico de biomas desde JavaScript
-- Buscador en tiempo real por nombre de bioma
-- Navegación entre páginas usando `localStorage`
-- Visualización de pronóstico semanal
-- Cálculo automático de estadísticas:
-  - Temperatura mínima de la semana
-  - Temperatura máxima de la semana
-  - Temperatura promedio
-  - Cantidad de días por tipo de clima
-- Generación de resumen automático:
-  - Ej: “Semana mayormente calurosa”, “Semana templada”, etc.
-- Diseño responsive (mobile + desktop)
-
-## Lógica implementada
-- Uso de `for` para recorrer datos
-- Uso de `if / else` para condiciones
-- Función para buscar bioma por id
-- Función para calcular estadísticas del clima
-- Manipulación del DOM para renderizar contenido dinámicamente
-
+- Listado dinámico de biomas.
+- Consumo de API real.
+- Pronóstico semanal.
+- Estadísticas automáticas.
+- Alertas climáticas.
+- Buscador dinámico.
+- Manejo de errores.
+- Diseño responsive.
+## Estadísticas calculadas
+- Temperatura mínima.
+- Temperatura máxima.
+- Temperatura promedio.
+- Cantidad de días soleados.
+- Cantidad de días lluviosos.
+## Alertas climáticas
+- Alerta de calor extremo.
+- Semana lluviosa.
+- Temperaturas muy bajas.
+## Cómo usar
+1. Descargar el proyecto.
+2. Abrir index.html.
+3. Seleccionar un bioma.
+4. Ver pronóstico y estadísticas.
 ## Repositorio GitHub
 https://github.com/GuayoEdu/ClimasMinecraft
 https://guayoedu.github.io/ClimasMinecraft/
-
-## Cómo usar
-1. Descargar o clonar el proyecto
-2. Abrir `index.html` en el navegador
-3. Usar el buscador para filtrar biomas
-4. Hacer click en un bioma para ver el detalle y estadísticas
