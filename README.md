@@ -1,73 +1,79 @@
-# Clima Nether - SPA con Vue.js
+# Clima Nether - SPA con Vue.js, Vuex y usuarios
 
-Aplicacion de clima inspirada en los biomas del Nether de Minecraft. Esta version migra la app original a una SPA con Vue.js, Vue Router, componentes `.vue`, datos de clima desde Open-Meteo y datos mock como respaldo si la API no responde.
+Aplicación de clima inspirada en los biomas del Nether de Minecraft. La app muestra lugares, clima actual, pronóstico semanal, estadísticas y alertas. En el Módulo 7 se agregó autenticación simulada, estado global con Vuex, rutas protegidas y personalización por usuario.
 
-## Tematica
+## Sistema de usuarios
 
-La app conserva la estetica Nether con colores oscuros, lava, rojo carmesi, glowstone, basalto y portales. Los lugares representan biomas y estructuras como Nether Wastes, Crimson Forest, Warped Forest, Basalt Deltas, Soul Sand Valley, Fortaleza del Nether, Bastion Remnant, Lago de Lava, Cueva de Glowstone y Portal Arruinado.
+La autenticación se simula en el frontend con usuarios mock guardados en Vuex. Al iniciar sesión se almacena el usuario actual con:
 
-## Vistas principales
+- Nombre.
+- Correo.
+- Preferencias de clima, como unidad `°C` o `°F`.
+- Lista de lugares favoritos.
+- Estado `isAuthenticated`.
 
-- Home: listado de lugares con imagen, tipo, temperatura actual y estado del clima.
-- Detalle de lugar: informacion ampliada del lugar seleccionado, pronostico semanal, estadisticas y alertas.
+Usuarios de prueba:
 
-## Rutas configuradas
+- `eduardo@nether.cl` / `nether123`
+- `alex@nether.cl` / `portal123`
 
-- `/`: Home.
-- `/lugar/:id`: detalle dinamico del lugar seleccionado.
+## Rutas principales
 
-La navegacion interna se maneja con Vue Router y no recarga la pagina.
+- `/`: Home con listado de biomas y búsqueda.
+- `/lugar/:id`: detalle dinámico del lugar seleccionado.
+- `/login`: formulario de inicio de sesión.
+- `/registro`: formulario de creación de cuenta simulada.
+- `/favoritos`: ruta protegida con los favoritos del usuario autenticado.
 
-## Interacciones
+Si un usuario no logueado intenta entrar a `/favoritos`, Vue Router lo redirige a `/login`.
 
-- Busqueda de lugares por nombre o tipo usando `v-model`.
-- Boton para limpiar la busqueda usando `@submit`.
-- Selector de unidad `°C / °F` usando `v-model`.
-- Seleccion de cards con `@click`.
-- Enlaces con `<RouterLink>`.
+## Personalización
+
+- La navbar muestra el nombre del usuario cuando hay sesión activa.
+- El botón de cerrar sesión limpia el estado de Vuex y redirige al login.
+- La unidad de temperatura se lee desde Vuex y cambia según la preferencia del usuario.
+- Los favoritos se guardan en Vuex y cambian según el usuario conectado.
+- El usuario Alex usa una variante visual tipo Warped Forest.
 
 ## Estructura principal
 
-- `src/App.vue`: componente raiz y selector de unidad.
+- `src/App.vue`: componente raíz, sesión, navegación y preferencias.
 - `src/views/HomeView.vue`: vista Home.
 - `src/views/PlaceDetailView.vue`: vista de detalle.
-- `src/components/WeatherCard.vue`: card reutilizable para cada lugar.
-- `src/router/index.js`: rutas de Vue Router.
-- `src/services/weatherService.js`: carga de clima, pronostico, estadisticas y alertas.
+- `src/views/LoginView.vue`: inicio de sesión.
+- `src/views/RegisterView.vue`: registro simulado.
+- `src/views/FavoritesView.vue`: ruta protegida de favoritos.
+- `src/components/WeatherCard.vue`: card reutilizable.
+- `src/router/index.js`: rutas y guard de autenticación.
+- `src/store/index.js`: estado global Vuex.
+- `src/services/weatherService.js`: clima, pronóstico, estadísticas y alertas.
 - `src/data/places.js`: lugares y recursos visuales.
-- `public/img`: imagenes tematicas usadas por la app.
+- `public/img`: imágenes temáticas.
 
-## Tecnologias usadas
+## Tecnologías usadas
 
 - Vue.js 3
 - Vue Router 4
+- Vuex 4
 - Vite
 - JavaScript ES6+
 - CSS3
 - Fetch API
-- Open-Meteo
+- Open-Meteo con datos mock de respaldo
 
-## Como ejecutar el proyecto
-
-1. Instalar dependencias:
+## Cómo ejecutar
 
 ```bash
 npm install
-```
-
-2. Ejecutar en modo desarrollo:
-
-```bash
 npm run dev
 ```
 
-3. Abrir la URL que entregue Vite en el navegador.
+Luego abrir la URL que entregue Vite.
 
-## Comandos utiles
+## Build
 
 ```bash
 npm run build
-npm run preview
 ```
 
 ## Repositorio GitHub

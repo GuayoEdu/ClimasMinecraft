@@ -2,9 +2,9 @@
   <main class="page">
     <section class="hero">
       <div class="hero-copy">
-        <span class="eyebrow">Módulo 6 - SPA con Vue.js</span>
+        <span class="eyebrow">Módulo 7 - Usuarios y Vuex</span>
         <h1>Climas del Nether</h1>
-        <p>Explora biomas inspirados en Minecraft, revisa su clima actual y entra al detalle para ver pronóstico, estadísticas y alertas.</p>
+        <p>Explora biomas inspirados en Minecraft, revisa su clima actual y guarda favoritos con tu sesión.</p>
       </div>
     </section>
 
@@ -26,7 +26,10 @@
         :key="lugar.id"
         :lugar="lugar"
         :temperatura="formatearTemperatura(lugar.temperaturaActual)"
+        :is-favorite="favoritos.includes(lugar.id)"
+        :can-favorite="isAuthenticated"
         @select="irADetalle"
+        @toggle-favorite="alternarFavorito"
       />
     </section>
   </main>
@@ -43,12 +46,6 @@ export default {
   components: {
     WeatherCard
   },
-  props: {
-    unidad: {
-      type: String,
-      required: true
-    }
-  },
   data() {
     return {
       lugares: [],
@@ -58,6 +55,15 @@ export default {
     };
   },
   computed: {
+    unidad() {
+      return this.$store.getters.unidad;
+    },
+    favoritos() {
+      return this.$store.getters.favoritos;
+    },
+    isAuthenticated() {
+      return this.$store.state.isAuthenticated;
+    },
     lugaresFiltrados() {
       const texto = this.busqueda.trim().toLowerCase();
       if (!texto) {
@@ -78,6 +84,9 @@ export default {
     },
     limpiarBusqueda() {
       this.busqueda = "";
+    },
+    alternarFavorito(id) {
+      this.$store.dispatch("toggleFavorito", id);
     },
     async cargarLugares() {
       this.cargando = true;

@@ -14,6 +14,9 @@
           <p><strong>Temperatura actual:</strong> {{ formatearTemperatura(lugar.temperaturaActual) }}</p>
           <p><strong>Estado:</strong> {{ lugar.estado }}</p>
           <p><strong>Viento:</strong> {{ lugar.vientoActual }} km/h</p>
+          <button v-if="isAuthenticated" class="favorite-button detail-favorite" type="button" @click="alternarFavorito">
+            {{ esFavorito ? "Quitar de favoritos" : "Agregar a favoritos" }}
+          </button>
         </div>
       </section>
 
@@ -68,12 +71,6 @@ const weatherService = new WeatherService();
 
 export default {
   name: "PlaceDetailView",
-  props: {
-    unidad: {
-      type: String,
-      required: true
-    }
-  },
   data() {
     return {
       lugar: null,
@@ -82,6 +79,20 @@ export default {
       cargando: true,
       error: ""
     };
+  },
+  computed: {
+    unidad() {
+      return this.$store.getters.unidad;
+    },
+    isAuthenticated() {
+      return this.$store.state.isAuthenticated;
+    },
+    favoritos() {
+      return this.$store.getters.favoritos;
+    },
+    esFavorito() {
+      return this.lugar ? this.favoritos.includes(this.lugar.id) : false;
+    }
   },
   methods: {
     formatearTemperatura(valor) {
@@ -99,6 +110,9 @@ export default {
     },
     volverHome() {
       this.$router.push("/");
+    },
+    alternarFavorito() {
+      this.$store.dispatch("toggleFavorito", this.lugar.id);
     },
     async cargarDetalle() {
       this.cargando = true;

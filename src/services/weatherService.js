@@ -57,16 +57,15 @@ export default class WeatherService {
   }
 
   async cargarLugares() {
-    const resultados = [];
-    for (const lugar of places) {
+    const resultados = await Promise.all(places.map(async lugar => {
       const clima = await this.obtenerClimaSeguro(lugar);
-      resultados.push({
+      return {
         ...lugar,
         temperaturaActual: clima.current_weather.temperature,
         vientoActual: clima.current_weather.windspeed,
         estado: this.obtenerEstadoClima(clima.current_weather.weathercode)
-      });
-    }
+      };
+    }));
     this.lugares = resultados;
     return resultados;
   }

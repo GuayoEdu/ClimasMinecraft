@@ -6,6 +6,9 @@
       <h2>{{ lugar.nombre }}</h2>
       <p><strong>Temperatura:</strong> {{ temperatura }}</p>
       <p><strong>Estado:</strong> <span class="weather-badge">{{ lugar.estado }}</span></p>
+      <button v-if="canFavorite" class="favorite-button" type="button" @click.stop="$emit('toggle-favorite', lugar.id)">
+        {{ isFavorite ? "Quitar favorito" : "Agregar favorito" }}
+      </button>
       <RouterLink class="action-button" :to="`/lugar/${lugar.id}`" @click.stop>Ver detalle</RouterLink>
     </div>
   </article>
@@ -22,8 +25,16 @@ export default {
     temperatura: {
       type: String,
       required: true
+    },
+    isFavorite: {
+      type: Boolean,
+      default: false
+    },
+    canFavorite: {
+      type: Boolean,
+      default: false
     }
   },
-  emits: ["select"]
+  emits: ["select", "toggle-favorite"]
 };
 </script>

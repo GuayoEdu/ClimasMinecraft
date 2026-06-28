@@ -4,6 +4,8 @@ export default class ApiClient {
   }
 
   async obtenerClima(lat, lon) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4500);
     const params = new URLSearchParams({
       latitude: lat,
       longitude: lon,
@@ -11,10 +13,16 @@ export default class ApiClient {
       current_weather: "true",
       timezone: "auto"
     });
-    const respuesta = await fetch(`${this.baseUrl}?${params.toString()}`);
-    if (!respuesta.ok) {
-      throw new Error("No se pudieron obtener los datos del clima");
+    try {
+      const respuesta = await fetch(`${this.baseUrl}?${params.toString()}`, {
+        signal: controller.signal
+      });
+      if (!respuesta.ok) {
+        throw new Error("No se pudieron obtener los datos del clima");
+      }
+      return await respuesta.json();
+    } finally {
+      clearTimeout(timeoutId);
     }
-    return await respuesta.json();
   }
 }
