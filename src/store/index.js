@@ -1,4 +1,7 @@
 import { createStore } from "vuex";
+import WeatherService from "../services/weatherService";
+
+const weatherService = new WeatherService();
 
 const usuariosMock = [
   {
@@ -26,18 +29,32 @@ const usuariosMock = [
 ];
 
 const usuarioGuardado = JSON.parse(localStorage.getItem("climaNetherUsuario"));
+const preferenciasGuardadas = JSON.parse(localStorage.getItem("climaNetherPreferencias")) || {
+  unidad: "C",
+  tema: "lava"
+};
 
 const store = createStore({
   state() {
     return {
       usuarios: usuariosMock,
       usuarioActual: usuarioGuardado,
-      isAuthenticated: Boolean(usuarioGuardado)
+      isAuthenticated: Boolean(usuarioGuardado),
+      preferencias: preferenciasGuardadas,
+      lugares: [],
+      lugarSeleccionado: null,
+      pronosticoSeleccionado: [],
+      estadisticasSeleccionadas: null,
+      alertasSeleccionadas: [],
+      climaCargando: false,
+      climaError: "",
+      detalleCargando: false,
+      detalleError: ""
     };
   },
   getters: {
     unidad(state) {
-      return state.usuarioActual?.preferencias?.unidad || "C";
+      return state.usuarioActual?.preferencias?.unidad || state.preferencias.unidad;
     },
     favoritos(state) {
       return state.usuarioActual?.favoritos || [];
@@ -47,7 +64,12 @@ const store = createStore({
     iniciarSesion(state, usuario) {
       state.usuarioActual = usuario;
       state.isAuthenticated = true;
+      state.preferencias = {
+        ...state.preferencias,
+        ...usuario.preferencias
+      };
       localStorage.setItem("climaNetherUsuario", JSON.stringify(usuario));
+      localStorage.setItem("climaNetherPreferencias", JSON.stringify(state.preferencias));
     },
     cerrarSesion(state) {
       state.usuarioActual = null;
@@ -55,6 +77,11 @@ const store = createStore({
       localStorage.removeItem("climaNetherUsuario");
     },
     actualizarPreferencias(state, preferencias) {
+      state.preferencias = {
+        ...state.preferencias,
+        ...preferencias
+      };
+      localStorage.setItem("climaNetherPreferencias", JSON.stringify(state.preferencias));
       if (!state.usuarioActual) {
         return;
       }
@@ -83,6 +110,27 @@ const store = createStore({
     },
     registrarUsuario(state, usuario) {
       state.usuarios.push(usuario);
+    },
+    setClimaCargando(state, cargando) {
+      state.climaCargando = cargando;
+    },
+    setClimaError(state, error) {
+      state.climaError = error;
+    },
+    setLugares(state, lugares) {
+      state.lugares = lugares;
+    },
+    setDetalleCargando(state, cargando) {
+      state.detalleCargando = cargando;
+    },
+    setDetalleError(state, error) {
+      state.detalleError = error;
+    },
+    setDetalleLugar(state, detalle) {
+      state.lugarSeleccionado = detalle;
+      state.pronosticoSeleccionado = detalle?.semana || [];
+      state.estadisticasSeleccionadas = detalle?.estadisticas || null;
+      state.alertasSeleccionadas = detalle?.alertas || [];
     }
   },
   actions: {
@@ -135,6 +183,43 @@ const store = createStore({
         preferencias: { ...nuevoUsuario.preferencias },
         favoritos: []
       });
+    },
+    async cargarLugares({ commit }) {
+      commit("setClimaCargando", true);
+      commit("setClimaError", "");
+      try {
+        const lugares = await weatherService.cargarLugares();
+        commit("setLugares", lugares);
+      } catch (error) {
+        commit("setClimaError", "No se pudieron cargar los datos del clima.");
+        throw error;
+      } finally {
+        commit("setClimaCargando", false);
+      }
+    },
+    async cargarDetalleLugar({ commit }, id) {
+      commit("setDetalleCargando", true);
+      commit("setDetalleError", "");
+      commit("setDetalleLugar", null);
+      try {
+        const detalle = await weatherService.cargarDetalleLugar(id);
+        if (!detalle) {
+          commit("setDetalleError", "No se encontró el lugar seleccionado.");
+          return;
+        }
+        const estadisticas = weatherService.calcularEstadisticas(detalle.semana);
+        const alertas = weatherService.generarAlertas(estadisticas);
+        commit("setDetalleLugar", {
+          ...detalle,
+          estadisticas,
+          alertas
+        });
+      } catch (error) {
+        commit("setDetalleError", "Error al cargar el detalle del clima.");
+        throw error;
+      } finally {
+        commit("setDetalleCargando", false);
+      }
     }
   }
 });

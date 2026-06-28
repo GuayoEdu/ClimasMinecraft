@@ -27,9 +27,6 @@
 
 <script>
 import WeatherCard from "../components/WeatherCard.vue";
-import WeatherService from "../services/weatherService";
-
-const weatherService = new WeatherService();
 
 export default {
   name: "FavoritesView",
@@ -38,8 +35,7 @@ export default {
   },
   data() {
     return {
-      lugares: [],
-      cargando: true,
+      cargando: false,
       error: ""
     };
   },
@@ -52,6 +48,9 @@ export default {
     },
     favoritos() {
       return this.$store.getters.favoritos;
+    },
+    lugares() {
+      return this.$store.state.lugares;
     },
     lugaresFavoritos() {
       return this.lugares.filter(lugar => this.favoritos.includes(lugar.id));
@@ -71,10 +70,13 @@ export default {
       this.$store.dispatch("toggleFavorito", id);
     },
     async cargarLugares() {
+      if (this.lugares.length > 0) {
+        return;
+      }
       this.cargando = true;
       this.error = "";
       try {
-        this.lugares = await weatherService.cargarLugares();
+        await this.$store.dispatch("cargarLugares");
       } catch (error) {
         this.error = "No se pudieron cargar los favoritos.";
       } finally {

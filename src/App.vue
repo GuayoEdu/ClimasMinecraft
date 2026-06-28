@@ -52,9 +52,7 @@ export default {
         return this.$store.getters.unidad;
       },
       set(unidad) {
-        if (this.isAuthenticated) {
-          this.$store.dispatch("actualizarUnidad", unidad);
-        }
+        this.$store.dispatch("actualizarUnidad", unidad);
       }
     },
     temaUsuario() {

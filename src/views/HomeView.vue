@@ -37,9 +37,6 @@
 
 <script>
 import WeatherCard from "../components/WeatherCard.vue";
-import WeatherService from "../services/weatherService";
-
-const weatherService = new WeatherService();
 
 export default {
   name: "HomeView",
@@ -48,13 +45,19 @@ export default {
   },
   data() {
     return {
-      lugares: [],
-      busqueda: "",
-      cargando: true,
-      error: ""
+      busqueda: ""
     };
   },
   computed: {
+    lugares() {
+      return this.$store.state.lugares;
+    },
+    cargando() {
+      return this.$store.state.climaCargando;
+    },
+    error() {
+      return this.$store.state.climaError;
+    },
     unidad() {
       return this.$store.getters.unidad;
     },
@@ -89,14 +92,13 @@ export default {
       this.$store.dispatch("toggleFavorito", id);
     },
     async cargarLugares() {
-      this.cargando = true;
-      this.error = "";
+      if (this.lugares.length > 0) {
+        return;
+      }
       try {
-        this.lugares = await weatherService.cargarLugares();
+        await this.$store.dispatch("cargarLugares");
       } catch (error) {
-        this.error = "No se pudieron cargar los datos del clima.";
-      } finally {
-        this.cargando = false;
+        return;
       }
     }
   },

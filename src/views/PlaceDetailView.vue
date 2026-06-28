@@ -23,7 +23,7 @@
       <section class="content-section">
         <h2>Pronóstico semanal</h2>
         <div class="forecast-grid">
-          <article class="forecast-card" v-for="dia in lugar.semana" :key="dia.dia">
+          <article class="forecast-card" v-for="dia in pronostico" :key="dia.dia">
             <h3>{{ formatearFecha(dia.dia) }}</h3>
             <p>Mín: {{ formatearTemperatura(dia.min) }}</p>
             <p>Máx: {{ formatearTemperatura(dia.max) }}</p>
@@ -65,22 +65,27 @@
 </template>
 
 <script>
-import WeatherService from "../services/weatherService";
-
-const weatherService = new WeatherService();
-
 export default {
   name: "PlaceDetailView",
-  data() {
-    return {
-      lugar: null,
-      estadisticas: null,
-      alertas: [],
-      cargando: true,
-      error: ""
-    };
-  },
   computed: {
+    lugar() {
+      return this.$store.state.lugarSeleccionado;
+    },
+    pronostico() {
+      return this.$store.state.pronosticoSeleccionado;
+    },
+    estadisticas() {
+      return this.$store.state.estadisticasSeleccionadas;
+    },
+    alertas() {
+      return this.$store.state.alertasSeleccionadas;
+    },
+    cargando() {
+      return this.$store.state.detalleCargando;
+    },
+    error() {
+      return this.$store.state.detalleError;
+    },
     unidad() {
       return this.$store.getters.unidad;
     },
@@ -115,22 +120,10 @@ export default {
       this.$store.dispatch("toggleFavorito", this.lugar.id);
     },
     async cargarDetalle() {
-      this.cargando = true;
-      this.error = "";
       try {
-        const datos = await weatherService.cargarDetalleLugar(this.$route.params.id);
-        if (!datos) {
-          this.lugar = null;
-          this.error = "No se encontró el lugar seleccionado.";
-          return;
-        }
-        this.lugar = datos;
-        this.estadisticas = weatherService.calcularEstadisticas(datos.semana);
-        this.alertas = weatherService.generarAlertas(this.estadisticas);
+        await this.$store.dispatch("cargarDetalleLugar", this.$route.params.id);
       } catch (error) {
-        this.error = "Error al cargar el detalle del clima.";
-      } finally {
-        this.cargando = false;
+        return;
       }
     }
   },
